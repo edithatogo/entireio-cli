@@ -27,6 +27,9 @@ on:
           - v2-dual-write
           - v2-only
 
+permissions:
+  contents: read
+
 jobs:
   e2e-checkpoints-v2:
     if: inputs.agent != 'copilot-cli'
@@ -37,6 +40,11 @@ jobs:
       contents: read
 
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -124,6 +132,11 @@ jobs:
       copilot-requests: write
 
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:

@@ -27,6 +27,9 @@ on:
           - git-branch
           - git-refs
 
+permissions:
+  contents: read
+
 jobs:
   # Build the agent matrix dynamically: a single selected agent, or all of them
   # when the input is left empty.
@@ -35,6 +38,11 @@ jobs:
     outputs:
       agents: ${{ steps.set.outputs.agents }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - id: set
         # Pass the input through env rather than interpolating it into the script:
         # `type: choice` only constrains the UI, so a REST-API dispatch could inject
@@ -69,6 +77,11 @@ jobs:
         agent: ${{ fromJson(needs.matrix-setup.outputs.agents) }}
 
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:

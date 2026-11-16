@@ -33,6 +33,11 @@ jobs:
     outputs:
       agents: ${{ steps.set.outputs.agents }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - id: set
         run: |
           input="${{ github.event.inputs.agent }}"
@@ -62,6 +67,11 @@ jobs:
         agent: ${{ fromJson(needs.matrix-setup.outputs.agents) }}
 
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -153,6 +163,11 @@ jobs:
       #            healthy run, so a failure here is a real regression.
       #   YELLOW — only a known-flaky agent failed. Worth investigating, but not
       #            a `main` regression. Reported so we don't lose visibility.
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Classify failures
         id: classify
         env:
